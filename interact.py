@@ -1,5 +1,5 @@
 """
-This file contains the class that hold the methods that handle the interaction with CLI and the
+This file contains the class that hold the methods that handle the interaction with Google CLI and the
 returning of the output thereof
 """
 

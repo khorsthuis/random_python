@@ -67,7 +67,5 @@ class HelperFunctions:
         :param yaml_dict: Dict that is to be converted
         :return: a yaml-formatted string
         """
-        # if isinstance(dict, yaml_dict):
         return yaml.dump(yaml_dict)
-        # else:
-        #     raise ValueError("The parsed object should be of type Dict but is of type {}".format(type(yaml_dict)))
+

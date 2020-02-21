@@ -104,15 +104,3 @@ def main():
 
 
 main()
-
-# dict = {"project-id": "ri-devops-sandbox",
-#             "bucket-name": "koens-bucket",
-#             "key-location": "europe-west4",
-#             "key-ring-id": "name-of-keyring",
-#             "crypto-key-id": "first-key",
-#             "service-account-email": "another-service-account@ri-devops-sandbox.iam.gserviceaccount.com"}
-#
-# json_string = json.dumps(dict)
-# print(json_string)
-
-
