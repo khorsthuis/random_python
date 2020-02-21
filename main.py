@@ -8,23 +8,25 @@ from google.cloud import kms_v1
 import json
 
 
-'''
-Custom fields for Jira DB tickets:
-    - user to get access:   13741
-    - database:     13740   [string]
-    - access types: 13742   [list]
-    - status.name           [string]
-    - description           [String
-'''
+"""
+This function is designed to be ran as cloud funciton on GCP
+The functionality in this program is as follows:
+1. grab file containing secrets from storage-bucket
+2. Decrypt the file using Google's KMS
+3. Populate object variables with secrets
+4. Make API-call to Jira to grab tickets that have been resolved in the last 24H
+5. Create strings that are to be sent as emails
+6. Use sendgrid api to send out emails
+"""
 class JiraInteract:
 
     def __init__(self):
         """constructor method"""
         encrypted_string = read_file_as_string("prod-jira-mail-function", "secrets/approved-ticket-mail-keys.enc")
-        decrypted_byte_string = decrypt_symmetric("ri-platform-prod",
-                                                  "europe-west2",
-                                                  "platform-prod-keyring",
-                                                  "jira-email-function",
+        decrypted_byte_string = decrypt_symmetric("project",
+                                                  "location",
+                                                  "keyring_name",
+                                                  "key_name",
                                                   encrypted_string)
         decrypted_string = decrypted_byte_string.decode("utf-8")
         dict = json.loads(decrypted_string)
@@ -41,7 +43,7 @@ class JiraInteract:
         jira = JIRA(
             basic_auth=(self.username, self.password),
             options={
-                'server': 'https://retailinsightltd.atlassian.net/'
+                'server': 'https://xxx.atlassian.net/'
             }
         )
         return jira
@@ -51,7 +53,7 @@ class JiraInteract:
         this function gets all the approved issues in the provided project and returns a list of
         issue objects.
         """
-        project_name = "DSD"
+        project_name = "xxx"
 
         # creating the connection with the Jira API
         jira = self.connect_api()
@@ -110,8 +112,8 @@ class JiraInteract:
         # print("sending emails")
         for email in emails_list:
             message = Mail(
-                from_email='platform.notifications@ri-team.com',
-                to_emails='finance-team@ri-team.com',
+                from_email='sender@123.com',
+                to_emails='reciever@123.com',
                 subject=email[:48],
                 html_content=email[48:])
             try:
@@ -124,6 +126,7 @@ class JiraInteract:
                 print(e.message)
 
 def read_file_as_string(bucket_name, blob_name):
+	"""Functin that reads in file on gcp as a string"""
     client = storage.Client()
     bucket = client.get_bucket(bucket_name)
     blob = bucket.blob(blob_name)
